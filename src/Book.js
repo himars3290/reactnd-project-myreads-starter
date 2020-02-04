@@ -1,33 +1,25 @@
-import React, {Component} from "react";
-
-class Book extends Component{
-  updateBooks = (selectedShelf) => {
-
-  }
-
-  render(){
-    const options = [{
-      value: 'currentlyReading',
-      text: 'Currently Reading'
+import React, { Component } from "react";
+class Book extends Component {
+	render() {
+		const options = [{
+				value: 'currentlyReading',
+				text: 'Currently Reading'
     },
-    {
-      value: 'wantToRead',
-      text: 'Want to Read'
+			{
+				value: 'wantToRead',
+				text: 'Want to Read'
     },
-    {
-      value: 'read',
-      text: 'Read'
+			{
+				value: 'read',
+				text: 'Read'
     },
-    {
-      value: 'none',
-      text: 'None'
+			{
+				value: 'none',
+				text: 'None'
     }]
-    const {book, onShelfChange} = this.props;
-
-
-
-    return(
-      <li>
+		const { book, onShelfChange } = this.props;
+		console.log(book);
+		return (<li>
         <div className="book">
           <div className="book-top">
             <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
@@ -45,11 +37,10 @@ class Book extends Component{
           </div>
           <div className="book-title">{book.title}</div>
           <div className="book-authors">
-          {book.authors.join(', ')}
+          {(book.authors === undefined)? '' : book.authors.join(', ')}
           </div>
         </div>
-      </li>
-    );
-  }
+      </li>);
+	}
 }
 export default Book;
