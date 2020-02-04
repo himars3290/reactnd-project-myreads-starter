@@ -49,20 +49,20 @@ class BooksApp extends React.Component {
 											<div className="list-books-title">
 												<h1>MyReads</h1>
 											</div>
-                      <BookShelf refresh={(flag) => {
-            							this.refreshBookShelves(flag)
+                      <BookShelf refreshBookShelves={(response) => {
+            							this.refreshBookShelves(response)
             					}}
                          name="Currently Reading"
                         books={currentlyReadingBooks}>
                       </BookShelf>
-                      <BookShelf refresh={(response) => {
+                      <BookShelf refreshBookShelves={(response) => {
             							this.refreshBookShelves(response)
             					}}
                         name="Want to Read"
                         books={wantToReadBooks}>
                       </BookShelf>
-                      <BookShelf refresh={(flag) => {
-            							this.refreshBookShelves(flag)
+                      <BookShelf refreshBookShelves={(response) => {
+            							this.refreshBookShelves(response)
             					}}
                         name="Read"
                         books={readBooks}>
@@ -76,7 +76,10 @@ class BooksApp extends React.Component {
               </Route>
 
               <Route path = "/search" render = {({ history }) => (
-                  <SearchBooks books={this.state.books}/>
+                  <SearchBooks refreshBookShelves={(response) => {
+											this.refreshBookShelves(response)
+									}}
+									/>
                 )}>
               </Route>
         </div> < /div> )

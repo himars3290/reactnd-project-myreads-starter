@@ -1,25 +1,14 @@
 import React, { Component } from "react";
-import * as BooksAPI from './BooksAPI'
-import Book from "./Book.js";
+import BookGrid from "./BookGrid.js";
 class BookShelf extends Component {
-	updateBookShelf = (book, changedShelf) => {
-		BooksAPI.update(book, changedShelf)
-			.then(response => {
-				if (this.props.refresh) {
-					this.props.refresh(response);
-				}
-			});
-	}
 	render() {
-		const { name, books } = this.props
+		const { name, books, refreshBookShelves } = this.props
 		return (<div className="bookshelf">
 	      <h2 className="bookshelf-title">{name}</h2>
 	      <div className="bookshelf-books">
-	        <ol className="books-grid">
-					{books.map((book)=>(
-						<Book key={book.id} book={book} onShelfChange={this.updateBookShelf}/>
-					))}
-	        </ol>
+					<BookGrid books={books} refresh={(response) => {
+							refreshBookShelves(response)
+					}}/>
 	      </div>
 	    </div>);
 	}

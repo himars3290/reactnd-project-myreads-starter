@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import * as BooksAPI from './BooksAPI'
-import Book from "./Book.js";
+import BookGrid from "./BookGrid.js";
 import { Link } from "react-router-dom";
 class SearchBooks extends Component {
 	state = {
@@ -19,12 +19,12 @@ class SearchBooks extends Component {
 					if (response['error']) {
 						console.log(response['error']);
 						this.clearBooks();
-						console.log(this.state.books);
+						// console.log(this.state.books);
 					} else {
 						this.setState(() => ({
 							books: response
 						}))
-						console.log(this.state.books);
+						// console.log(this.state.books);
 					}
 				} else {
 					this.clearBooks();
@@ -40,6 +40,7 @@ class SearchBooks extends Component {
 	}
 	render() {
 		const { books } = this.state;
+		const { refreshBookShelves } = this.props;
 		return (<div className="search-books">
       <div className="search-books-bar">
         <Link to="/" className="close-search">Close</Link>
@@ -51,11 +52,9 @@ class SearchBooks extends Component {
       <div className="search-books-results">
         {
   				books.length > 0 && (<div className="bookshelf-books">
-  	        <ol className="books-grid">
-  					{books.map((book)=>(
-  						<Book key={book.id} book={book} />
-  					))}
-  	        </ol>
+          <BookGrid books={books} refresh={(response) => {
+              refreshBookShelves(response)
+          }}/>
   	      </div>)
   			}
         {

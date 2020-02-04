@@ -18,7 +18,6 @@ class Book extends Component {
 				text: 'None'
     }]
 		const { book, onShelfChange } = this.props;
-		console.log(book);
 		return (<li>
         <div className="book">
           <div className="book-top">
