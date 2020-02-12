@@ -13,6 +13,7 @@ class SearchBooks extends Component {
 		}))
 	}
 	searchBooks = (query) => {
+		const { booksWithCat } = this.props;
 		BooksAPI.search(query)
 			.then(response => {
 				if (response !== undefined) {
@@ -22,7 +23,17 @@ class SearchBooks extends Component {
 						// console.log(this.state.books);
 					} else {
 						this.setState(() => ({
-							books: response
+							books: response.map((book) => {
+								const b = book;
+								if (booksWithCat.readBooksIds.includes(b.id)) {
+									b.shelf = "read"
+								} else if (booksWithCat.currentlyReadingIds.includes(b.id)) {
+									b.shelf = "currentlyReading"
+								} else if (booksWithCat.wantToReadIds.includes(b.id)) {
+									b.shelf = "wantToRead"
+								}
+								return b;
+							})
 						}))
 						// console.log(this.state.books);
 					}

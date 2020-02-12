@@ -9,9 +9,17 @@ class BooksApp extends React.Component {
 			books: [],
 			readBooks: [],
 			currentlyReadingBooks: [],
-			wantToReadBooks: []
+			wantToReadBooks: [],
+			catBookIds: {
+				"readBooksIds": [],
+				"wantToReadIds": [],
+				"currentlyReadingIds": []
+			}
 		}
 		componentDidMount() {
+			this.getBooks();
+		}
+		getBooks = () => {
 			BooksAPI.getAll()
 				.then((booksFromAPI) => {
 					this.setState((prevState) => ({
@@ -19,6 +27,15 @@ class BooksApp extends React.Component {
 						readBooks: booksFromAPI.filter((book) => (book.shelf === 'read')),
 						currentlyReadingBooks: booksFromAPI.filter((book) => (book.shelf === 'currentlyReading')),
 						wantToReadBooks: booksFromAPI.filter((book) => (book.shelf === 'wantToRead')),
+						catBookIds: {
+							...prevState.user,
+							'readBooksIds': booksFromAPI.filter((book) => (book.shelf === 'read'))
+								.map((b) => (b.id)),
+							'wantToReadIds': booksFromAPI.filter((book) => (book.shelf === 'currentlyReading'))
+								.map((b) => (b.id)),
+							'currentlyReadingIds': booksFromAPI.filter((book) => (book.shelf === 'wantToRead'))
+								.map((b) => (b.id)),
+						},
 					}))
 				});
 		}
@@ -41,7 +58,7 @@ class BooksApp extends React.Component {
 			}))
 		}
 		render() {
-			const { readBooks, currentlyReadingBooks, wantToReadBooks } = this.state;
+			const { readBooks, currentlyReadingBooks, wantToReadBooks, catBookIds } = this.state;
 			return (<div className="app">
         				<div className="list-books">
                 <Route exact path="/" render={()=>(
@@ -77,8 +94,9 @@ class BooksApp extends React.Component {
 
               <Route path = "/search" render = {({ history }) => (
                   <SearchBooks refreshBookShelves={(response) => {
-											this.refreshBookShelves(response)
+											this.getBooks();
 									}}
+									booksWithCat = {catBookIds}
 									/>
                 )}>
               </Route>
