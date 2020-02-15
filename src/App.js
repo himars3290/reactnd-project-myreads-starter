@@ -22,22 +22,25 @@ class BooksApp extends React.Component {
 		getBooks = () => {
 			BooksAPI.getAll()
 				.then((booksFromAPI) => {
-					this.setState((prevState) => ({
-						books: booksFromAPI,
-						readBooks: booksFromAPI.filter((book) => (book.shelf === 'read')),
-						currentlyReadingBooks: booksFromAPI.filter((book) => (book.shelf === 'currentlyReading')),
-						wantToReadBooks: booksFromAPI.filter((book) => (book.shelf === 'wantToRead')),
-						catBookIds: {
-							...prevState.user,
-							'readBooksIds': booksFromAPI.filter((book) => (book.shelf === 'read'))
-								.map((b) => (b.id)),
-							'wantToReadIds': booksFromAPI.filter((book) => (book.shelf === 'currentlyReading'))
-								.map((b) => (b.id)),
-							'currentlyReadingIds': booksFromAPI.filter((book) => (book.shelf === 'wantToRead'))
-								.map((b) => (b.id)),
-						},
-					}))
+					this.updateState(booksFromAPI)
 				});
+		}
+		updateState = (books) => {
+			this.setState((prevState) => ({
+				books: books,
+				readBooks: books.filter((book) => (book.shelf === 'read')),
+				currentlyReadingBooks: books.filter((book) => (book.shelf === 'currentlyReading')),
+				wantToReadBooks: books.filter((book) => (book.shelf === 'wantToRead')),
+				catBookIds: {
+					...prevState.user,
+					'readBooksIds': books.filter((book) => (book.shelf === 'read'))
+						.map((b) => (b.id)),
+					'wantToReadIds': books.filter((book) => (book.shelf === 'wantToRead'))
+						.map((b) => (b.id)),
+					'currentlyReadingIds': books.filter((book) => (book.shelf === 'currentlyReading'))
+						.map((b) => (b.id)),
+				},
+			}))
 		}
 		refreshBookShelves = (response) => {
 			const changedBooks = this.state.books.map((book) => {
@@ -50,12 +53,7 @@ class BooksApp extends React.Component {
 				}
 				return book;
 			});
-			this.setState(() => ({
-				books: changedBooks,
-				readBooks: changedBooks.filter((book) => (book.shelf === 'read')),
-				currentlyReadingBooks: changedBooks.filter((book) => (book.shelf === 'currentlyReading')),
-				wantToReadBooks: changedBooks.filter((book) => (book.shelf === 'wantToRead')),
-			}))
+			this.updateState(changedBooks);
 		}
 		render() {
 			const { readBooks, currentlyReadingBooks, wantToReadBooks, catBookIds } = this.state;

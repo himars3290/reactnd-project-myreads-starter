@@ -12,13 +12,11 @@ class BookGrid extends Component {
 	}
 	render() {
 		const { books } = this.props
-		return (
-	        <ol className="books-grid">
+		return (<ol className="books-grid">
 					{books.map((book)=>(
 						<Book key={book.id} book={book} onShelfChange={this.updateBookShelf}/>
 					))}
-	        </ol>
-	      );
+	        </ol>);
 	}
 }
 export default BookGrid;

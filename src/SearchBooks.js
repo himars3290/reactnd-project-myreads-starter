@@ -12,42 +12,45 @@ class SearchBooks extends Component {
 			books: []
 		}))
 	}
+	componentDidUpdate(prevProps) {
+		if (prevProps.booksWithCat !== this.props.booksWithCat) this.updateState(this.state.books, this.props.booksWithCat);
+	}
 	searchBooks = (query) => {
 		const { booksWithCat } = this.props;
 		BooksAPI.search(query)
 			.then(response => {
-				if (response !== undefined) {
-					if (response['error']) {
-						console.log(response['error']);
-						this.clearBooks();
-						// console.log(this.state.books);
-					} else {
-						this.setState(() => ({
-							books: response.map((book) => {
-								const b = book;
-								if (booksWithCat.readBooksIds.includes(b.id)) {
-									b.shelf = "read"
-								} else if (booksWithCat.currentlyReadingIds.includes(b.id)) {
-									b.shelf = "currentlyReading"
-								} else if (booksWithCat.wantToReadIds.includes(b.id)) {
-									b.shelf = "wantToRead"
-								}
-								return b;
-							})
-						}))
-						// console.log(this.state.books);
-					}
+				if (response !== undefined && response['error'] === undefined) {
+					this.updateState(response, booksWithCat);
 				} else {
 					this.clearBooks();
-					// console.log(this.state.books);
 				}
 			});
+	}
+	updateState = (books, booksWithCat) => {
+		this.setState(() => ({
+			books: books.map((book) => {
+				const b = book;
+				if (booksWithCat.readBooksIds.includes(b.id)) {
+					b.shelf = "read"
+				} else if (booksWithCat.currentlyReadingIds.includes(b.id)) {
+					b.shelf = "currentlyReading"
+				} else if (booksWithCat.wantToReadIds.includes(b.id)) {
+					b.shelf = "wantToRead"
+				}
+				return b;
+			})
+		}))
 	}
 	updateQuery = (input) => {
 		this.setState(() => ({
 			query: input.trim()
-		}))
-		this.searchBooks(input.trim());
+		}), () => {
+			if (this.state.query.length > 0) {
+				this.searchBooks(this.state.query);
+			} else {
+				this.clearBooks();
+			}
+		})
 	}
 	render() {
 		const { books } = this.state;
@@ -64,10 +67,12 @@ class SearchBooks extends Component {
         {
   				books.length > 0 && (<div className="bookshelf-books">
           <BookGrid books={books} refresh={(response) => {
-              refreshBookShelves(response)
+              refreshBookShelves(response);
+
           }}/>
   	      </div>)
   			}
+
         {
   				books.length <= 0 && (<div>
   					<p> No books
@@ -80,4 +85,3 @@ class SearchBooks extends Component {
 	}
 }
 export default SearchBooks;
-// onClick={() => this.setState({ showSearchPage: false })}
