@@ -71,7 +71,7 @@ class BooksApp extends React.Component {
         <div className="list-books">
           <Route
             exact
-            path="/"
+            path="/myreads"
             render={() => (
               <div className="list-books">
                 <div className="list-books-title">
@@ -99,7 +99,7 @@ class BooksApp extends React.Component {
                   books={readBooks}
                 />
                 <div className="open-search">
-                  <Link to="/search" className="add-contact">
+                  <Link to="/myreads/search" className="add-contact">
                     Add a book
                   </Link>
                 </div>
@@ -108,7 +108,7 @@ class BooksApp extends React.Component {
           />
 
           <Route
-            path="/search"
+            path="/myreads/search"
             render={({ history }) => (
               <SearchBooks
                 refreshBookShelves={response => {
